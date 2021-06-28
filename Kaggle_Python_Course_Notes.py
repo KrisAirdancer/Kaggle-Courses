@@ -106,4 +106,30 @@ print(to_smash(99, 11)) # Returns zero
 
 # MODULE 3 - Booleans and Conditionals
 
+# Boolean values in Py are represented as bool and hold the value of true or false
+
+# Boolean operators (==, !=, <, etc.) are the same as in Java
+
+# To combine boolean operators in Py, we use and, not, and or
+
+print(3 == 4 and 3==3) # Returns false
+print(3 == 4 or 3 == 3) # Returns true
+
+
+# When working with a large chunk of boolean expressions, use parenteses and break the 
+# code up over several lines to help emphasize the strucutre of the statement.
+prepared_for_weather = (
+    have_umbrella 
+    or ((rain_level < 5) and have_hood) 
+    or (not (rain_level > 0 and is_workday))
+)
+
+
+
+
+
+
+
+
+
 
