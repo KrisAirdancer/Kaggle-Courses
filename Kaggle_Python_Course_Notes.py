@@ -125,11 +125,67 @@ prepared_for_weather = (
 )
 
 
+# CONDITIONALS
+
+# Py uses the conditional statements if, else, and elif (else if)
+# Note that else if does NOT work, it must be formatted as elif.
+
+"""
+The : is used to indicate the start of a code block.
+
+Note especially the use of colons (:) and whitespace to denote separate blocks of code.
+This is similar to what happens when we define a function - the function header ends with :,
+and the following line is indented with 4 spaces. All subsequent indented lines belong to
+the body of the function, until we encounter an unindented line, ending the function definition.
+"""
+
+# Example use of the :
+def f(x):
+    if x > 0:
+        print("Only printed when x is positive; x =", x)
+        print("Also only printed when x is positive; x =", x)
+    print("Always printed, regardless of x's value; x =", x)
+
+f(1)
+f(0)
 
 
+"""
+Like the int() and float() functions that turn the passed values into integers and floats respectively,
+the bool() function turns things into boolean values, true and false.
+"""
+print(bool(1)) # all numbers are treated as true, except 0
+print(bool(0))
+print(bool("asf")) # all strings are treated as true, except the empty string ""
+print(bool(""))
+# Generally empty sequences (strings, lists, and other types we've yet to see like lists and tuples)
+# are "falsey" and the rest are "truthy"
 
+"""
+!!! - NOTE: We can use non-boolean objects in if conditions and other places where a boolean
+would be expected. Python will implicitly treat them as their corresponding boolean value:
+"""
 
+# A note on using the print() function. You can include the conditional statement in the print() call.
+if total_candies == 1:
+    print("Splitting 1 candy")
+else:
+    print("Splitting", total_candies, "candies")
+#Here's a slightly more succinct solution using a conditional expression:
+print("Splitting", total_candies, "candy" if total_candies == 1 else "candies")
 
+"""
+The not keyword inverts the value of a Boolean expression. For instance, the not keyword
+flips the value of True to False.
+"""
 
-
+# An example of an "exclusive or" (the default or in Py is inclusive)
+ketchup = true
+mustard = true
+onion = true
+def exactly_one_sauce(ketchup, mustard, onion):
+    """Return whether the customer wants either ketchup or mustard, but not both.
+    (You may be familiar with this operation under the name "exclusive or")
+    """
+    return (ketchup and not mustard) or (mustard and not ketchup)
 
