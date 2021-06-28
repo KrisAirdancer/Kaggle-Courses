@@ -76,5 +76,34 @@ print(
 )
 
 
+# The Pass keyword literlly does nothing. We can use it to prevent Python from
+# giving us an error when building out a method b/c Python will give an error
+# if the method body is left blank. We simply add Pass to the method body and the 
+# issue goes away.
 
-# MODULE 3 - 
+
+# The round method can be called with negative values for the number of places to round to.
+# In doing so, it will round to the nearest 1s, 10s, 100s, etc. place
+print(round(12345, -2)) # Returns 12300
+
+"""
+In a method header, the notation parameter_name=default_value can be used to set a default
+value to be passed if that parameter isn't passed a value by the method call.
+"""
+def to_smash(total_candies,num_friends=3):
+    """Return the number of leftover candies that must be smashed after distributing
+    the given number of candies evenly between 3 friends.
+    
+    >>> to_smash(91)
+    1
+    """
+    return total_candies % num_friends
+
+print(to_smash(91)) # Returns 1, b/c doefaults to 3
+print(to_smash(99, 11)) # Returns zero
+
+
+
+# MODULE 3 - Booleans and Conditionals
+
+
