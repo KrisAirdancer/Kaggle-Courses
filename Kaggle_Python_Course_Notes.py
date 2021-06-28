@@ -1,7 +1,8 @@
 ﻿
 
-
+#######################################
 # MODULE 2 - Functions and Getting Help
+#######################################
 
 help(round) # Provides info about the method whose name you pass as a parameter
 
@@ -103,8 +104,9 @@ print(to_smash(91)) # Returns 1, b/c doefaults to 3
 print(to_smash(99, 11)) # Returns zero
 
 
-
+######################################
 # MODULE 3 - Booleans and Conditionals
+######################################
 
 # Boolean values in Py are represented as bool and hold the value of true or false
 
@@ -118,14 +120,19 @@ print(3 == 4 or 3 == 3) # Returns true
 
 # When working with a large chunk of boolean expressions, use parenteses and break the 
 # code up over several lines to help emphasize the strucutre of the statement.
+have_umbrella =  True
+rain_level = 3
+have_hood = False
+is_workday = True
 prepared_for_weather = (
     have_umbrella 
     or ((rain_level < 5) and have_hood) 
     or (not (rain_level > 0 and is_workday))
 )
 
-
+##############
 # CONDITIONALS
+##############
 
 # Py uses the conditional statements if, else, and elif (else if)
 # Note that else if does NOT work, it must be formatted as elif.
@@ -167,6 +174,7 @@ would be expected. Python will implicitly treat them as their corresponding bool
 """
 
 # A note on using the print() function. You can include the conditional statement in the print() call.
+total_candies = 45
 if total_candies == 1:
     print("Splitting 1 candy")
 else:
@@ -180,12 +188,166 @@ flips the value of True to False.
 """
 
 # An example of an "exclusive or" (the default or in Py is inclusive)
-ketchup = true
-mustard = true
-onion = true
+ketchup = True
+mustard = True
+onion = True
 def exactly_one_sauce(ketchup, mustard, onion):
     """Return whether the customer wants either ketchup or mustard, but not both.
     (You may be familiar with this operation under the name "exclusive or")
     """
     return (ketchup and not mustard) or (mustard and not ketchup)
+
+"""
+An interesting appliction of the int() function.
+
+We’ve seen that calling bool() on an integer returns False if it’s equal to 0 and True otherwise.
+What happens if we call int() on a bool? Try it out in the notebook cell below.
+
+Can you take advantage of this to write a succinct function that corresponds to the English sentence
+"does the customer want exactly one topping?"?
+"""
+
+def exactly_one_topping(ketchup, mustard, onion):
+    """Return whether the customer wants exactly one of the three available toppings
+    on their hot dog.
+    """
+    sum = int(ketchup) + int(mustard) + int(onion)
+    
+    return sum == 1
+
+"""
+This condition would be pretty complicated to express using just and, or and not,
+but using boolean-to-integer conversion gives us this short solution:
+"""
+
+# return (int(ketchup) + int(mustard) + int(onion)) == 1
+
+"""
+Fun fact: we don't technically need to call int on the arguments. Just by doing addition with booleans,
+Python implicitly does the integer conversion. So we could also write...
+"""
+
+# return (ketchup + mustard + onion) == 1
+
+
+##################
+# MODULE 4 - Lists
+##################
+
+# Example list
+primes = [2, 3, 11, 5, 7]
+
+# You can make a list of nearly anything, ints, floats, strings, even other lits.
+hands = [
+    ['J', 'Q', 'K'],
+    ['2', '2', '2'],
+    ['6', 'A', 'K'], # (Comma after the last element is optional)
+]
+# (I could also have written this on one line, but it can get hard to read)
+hands = [['J', 'Q', 'K'], ['2', '2', '2'], ['6', 'A', 'K']]
+
+# One can even mix variable types in a single list
+my_favourite_things = [32, 'raindrops on roses', help]
+# (Yes, Python's help function is *definitely* one of my favourite things)
+
+# Py uses indexing for lists, just like Java. The index starts at zero, just like Java.
+my_favourite_things[0] # Yields 32
+
+# !!! - Note: Elements at the end of the list can be accessed with negative numbers, starting from -1:
+my_favourite_things[-1] # Yields the help function
+
+# A set of items can be returned from a list using slicing:
+primes[0:2] # Returns 2, 3
+# Note: Slicing goes up to, but does not include, the index value after the :
+# The starting and ending values are optional and the beginning and ends of the list will be used as default
+primes[:2] # Is the same as above
+
+# Negative indicies can also be used in slicing
+primes[0:-2] # Returns 2, 3, 5 Note that the element at the negative index is included in the return
+
+# Lists are mutable and can be changed in-place
+primes[0] = 17
+
+#####################
+# FUNCTIONS FOR LISTS
+#####################
+
+# The len() function can be used to get the length of a list
+len(primes)
+
+# The sorted() function returns a sorted version of the list
+# !!! - Note: The sorted() function does NOT modify the original list
+print("Sorted List: ", sorted(primes))
+print("Original List: ", primes)
+new_list = sorted(primes)
+# However, the sorted list can be assigned to a variable and retain the sorting - that is, sorted() is making a new list instance
+print("new_list: ", new_list)
+
+# The sum() function sums the values in the list
+sum(primes)
+
+# The min() and max() functions can accept a single list as a parameter
+min(primes)
+max(primes)
+
+###################
+# Objects in Python
+###################
+
+# Everyting in Py in an object.
+# Objects have both attributes (variablesa) and functions (methods)
+# The attributes and functions of an object can be accessed using dot syntax
+
+# For example, numbers have a method called bit_length. Again, we access it using dot syntax:
+x = 10
+x.bit_length
+# Output: <function int.bit_length()>
+# To actually call it, we add parentheses:
+x.bit_length()
+
+# Object methods can also be passed to the help() function
+help(x.bit_length)
+
+###################
+# Methods for lists
+###################
+
+# list.append modifies a list by adding an item to the end
+primes.append(13)
+
+# Side note: The -> None part of a help() output tells us that the method doesn't return anything.
+# This is part of the output you will get if you call help() on a list object.
+
+# list.pop removes and returns the last element of a list
+primes.pop() # Defaults to the last element in the list
+
+#################
+# Searching Lists
+#################
+
+# list.index() returns the index value of a specified object in a list.
+# Note: If the element does not exist in the list, an error will be thrown.
+
+# The in keyword can be used to determine if a particluar object exists in a list
+13 in primes # Returns True
+
+# The help() function can be used to get a list of the methods that a particular object has
+
+########
+# Tuples
+########
+
+"""
+Tuples are basically lists except that,
+1. The syntax used to create them uses parentheses instead of square brackets
+2. They are immutable
+"""
+
+# Creating a tuple
+prime_tuple = (2, 3, 7, 13)
+
+# That Python trick a, b = b, a
+# The formula a, b = b, a can be used to swap variables a and b without using a third temp variable
+# That said, I don't know how this works. The course says it takes advantage of tuples.
+
 
