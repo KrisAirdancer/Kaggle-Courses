@@ -580,6 +580,8 @@ for planet, initial in planet_to_initial.items():
 
 help(str)
 
-
+#################################
+# Working with External Libraries
+#################################
 
 
