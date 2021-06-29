@@ -438,6 +438,23 @@ def count_negatives(nums):
 # See the Zen of Python for more on this: https://en.wikipedia.org/wiki/Zen_of_Python
 # When in doubt, choose the code that will be easiest for others to understand.
 
+####################################################
+# Part 2 of Module 5 - Lists and List Comprehensions
+####################################################
+
+# The following returns items in the list for num in nums that meet the expression num & 7 == 0 
+def has_lucky_number(nums):
+    return any([num % 7 == 0 for num in nums])
+
+# The Monte Carlo Method
+"""
+This is a method of determining the average result of some activity or occurance.
+We simulate the event many, many times, then average the outcome of all of the
+simulations to get the average outcome for any given occurance.
+
+This can be used to estimate slot machine earnings, stock market performance, etc.
+"""
+
 
 
 
