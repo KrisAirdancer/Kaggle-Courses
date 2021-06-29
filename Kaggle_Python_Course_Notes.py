@@ -351,3 +351,95 @@ prime_tuple = (2, 3, 7, 13)
 # That said, I don't know how this works. The course says it takes advantage of tuples.
 
 
+#########################################
+# MODULE 5: Loops and List Comprehensions
+#########################################
+
+planets = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune']
+
+def planet_loop(planets):
+    for planet in planets:
+        print(planet, end=' ') # print all on same line
+
+"""
+The for loop specifies the variable name to use (in this case, planet)
+the set of values to loop over (in this case, planets)
+
+You use the word "in" to link them together.
+The object to the right of the "in" can be any object that supports iteration.
+Basically, if it can be thought of as a group of things, you can probably loop over it.
+In addition to lists, we can iterate over the elements of a tuple:
+"""
+
+multiplicands = (2, 2, 2, 3, 3, 5)
+
+def mulitply(multiplicands):
+    product = 1
+    for mult in multiplicands:
+        product = product * mult
+    product
+
+# One can loop over any type of list
+
+# The range() function can be used with for loops to repeat certain tasks
+for i in range(5):
+    print("Example number ", i)
+
+# while loops iterate until a condition is met
+index = 0
+while index < 10:
+    print(index, end=' ')
+    index += 1
+
+
+#####################
+# List Comprehensions
+#####################
+
+"""
+List comprehensions is a way to generate a list of related
+elements. Such as all of the values from 1 to 100 squared.
+(see example below)
+The general format for a list comprehension is:
+
+NOTE: Expression means an expression for each term in the list
+
+[expression for value in collection] A basic LC
+
+[expresion for value in collection if <test>] An LC using conditionals.
+Elements will only be included in the list if they satisfy the conditional statement.
+
+[expression for value in collection if <test1> and <test2>] An LC where both
+conditionals must be true for an item to be included in the list
+
+See here for help with this: https://www.youtube.com/watch?v=AhSvKGTh28Q&ab_channel=Socratica
+"""
+
+# NOTE: Exponents in Python are represented with double asteriks **
+
+# Example of populating a list WITHOUT list comprehensions
+squares = [] # An empty list to start
+for i in range(1, 100): # Loop over the range of values, square them, and add them to the squares list
+    squares.append(i**2) # Square each value and add it to the list
+
+print(squares)
+
+# Example of populating a list WITH list comprehensions
+squares2 = [i**2 for i in range(1, 100)]
+print(squares2)
+
+# List Comprehensions can be used for things other than generating lists
+# Example of using LC to count the numbner of negative values (-1, -2, -3, etc.) in a list
+def count_negatives(nums):
+    return len([num for num in nums if num < 0])
+
+# List comprehensions allow for some great one liners, but overusing one liners can lead to worse coding solutions
+# in terms of readability and understandability.
+# See the Zen of Python for more on this: https://en.wikipedia.org/wiki/Zen_of_Python
+# When in doubt, choose the code that will be easiest for others to understand.
+
+
+
+
+
+
