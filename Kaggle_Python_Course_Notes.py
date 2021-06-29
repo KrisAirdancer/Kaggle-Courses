@@ -545,5 +545,41 @@ planet, pluto_mass, pluto_mass / earth_mass, population,
 ))
 
 
+# Dictionaries in Py are roughly the same as Hashmaps in Java - they map key-value pairs
+numbers = {'one':1, 'two':2, 'three':3} # Here, 'one', 'two', and 'three' are keys and 1, 2, 3 are values
+# The values can be accessed using the keys
+print(numbers['one'])
+# New values can be added as follows
+numbers['four'] = 4
+print(numbers)
+# Values can be changed the same way
+numbers['one'] = 'Hello!'
+print(numbers)
+
+# Py allows us to use dictionary comprehensions - similar to list comprehensions - to make dictionaries
+planets = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune']
+planet_to_initial = {planet: planet[0] for planet in planets}
+print(planet_to_initial)
+
+# The in operator can be used to tell us if something is in a dictionary
+print('Saturn' in planet_to_initial)
+
+# We can also loop over the keys in a dictionary with a for loop
+for k in numbers:
+    print("{} = {}".format(k, numbers[k]))
+
+# We can access all of the keys and values in a dictionary using the keys() and values() functions
+print(planet_to_initial.keys())
+print(planet_to_initial.values())
+
+# We can acces the key-value pairs simultaneously using items() NOTE: In Py, items refers to key-value pairs, one pair is one item
+print(planet_to_initial.items())
+# Or we can format the output
+for planet, initial in planet_to_initial.items():
+    print("{} begins with \"{}\"".format(planet.rjust(10), initial))
+
+help(str)
+
+
 
 
