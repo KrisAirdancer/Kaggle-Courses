@@ -584,4 +584,52 @@ help(str)
 # Working with External Libraries
 #################################
 
+# New libraries and modules can be imported using the import keyword
+import math # Importing the math module from the standard Py library
+
+# The math module contains a bunch of pre-defined variables for our use
+print(math.pi)
+
+# math.log() returns the natural logarithm of the expression - defaults to base 3, but can be set to any other base
+
+# You can call help on libraries and modules
+help(math)
+
+# If we know we'll be using functions in math frequently we can import it under a shorter alias to save some typing (though in this case "math" is already pretty short).
+import math as mt
+print(mt.pi)
+"""
+Note: it is common convention to do this with popular libraries, such as
+to import numpy as np and import pandas as pd.
+"""
+
+# We can also access all of the variables without the dot notation using import *
+# import * makes all the module's variables directly accessible to you (without any dotted prefix).
+from math import *
+print(pi, log(32, 2))
+"""
+!!! - Note: Many libraries share variable names. If you import from multiple libraries
+you should make sure to avoid using import *, as it can cause errors when the compiler
+doesn't know what library to pull a variable from.
+
+It is best practice to simply avoid using import *.
+"""
+
+# Another option for imports is to import only the variables you need from a particular library
+from math import log, pi
+
+# Note that some libraries actually utilize other libraries. These are called sub-modules
+# The random library within the Numpy library is an example of this.
+import numpy
+print("numpy.random is a", type(numpy.random))
+print("it contains names such as...",
+      dir(numpy.random)[-15:]
+     )
+
+
+
+
+
+
+
 
