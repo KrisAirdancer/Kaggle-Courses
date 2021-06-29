@@ -439,7 +439,7 @@ def count_negatives(nums):
 # When in doubt, choose the code that will be easiest for others to understand.
 
 ####################################################
-# Part 2 of Module 5 - Lists and List Comprehensions
+# Part 2 of Module 5 - Loops and List Comprehensions
 ####################################################
 
 # The following returns items in the list for num in nums that meet the expression num & 7 == 0 
@@ -455,7 +455,130 @@ simulations to get the average outcome for any given occurance.
 This can be used to estimate slot machine earnings, stock market performance, etc.
 """
 
+#####################################
+# MODULE 6 - Strings and Dictionaries
+#####################################
 
+"""
+Strings can be defined using either "double" or 'single' quotations.
+Double quotes are usefull if your string contains single quote characters
+or vice-versa.
+"""
+print("Pluto's a planet!")
+print('My dog is named "Pluto"')
+# We can also "escape" internal quotes using a backslash
+print('Pluto\'s a planet!')
+
+# Some other uses of the backslash are as follows:
+print('A single quote \'')
+print("A double quote \"")
+print("A backslash \\")
+print("A return \n See, a new line!")
+
+# Another way to create a new line is with triple quotes """
+print("""hello
+world""")
+
+# The default end= value for print() is a newline character
+print("hello")
+print("world")
+print("hello", end='')
+print("pluto", end='')
+print("\n")
+
+# Strings are effectively lists and we can do operations on them largely as if they are a list
+# HOWEVER, strings in Py are immutable - they cannot be modified
+
+planet = "Neptune"
+# Indexing
+print(planet[0])
+# Slicing
+print(planet[-3:])
+# Length
+print(len(planet))
+# Looping
+print([char+'! ' for char in planet])
+
+# See, no chaning them
+# planet[0] = 'B' This would throw an error if run!
+
+##################################
+# Methods for working with strings
+##################################
+
+# Uppercase
+planet.upper()
+# Lowercase
+planet.lower()
+# Find the first index of a substring
+planet.index('ept')
+
+# Splitting a string into a list of substrings (defaults to split on whitespace)
+lovemuffin = "Leauge Of Villanous Evildoers Maniacally United For Firghtening Investments In Naughtiness"
+print(lovemuffin.split())
+# You can pass a value to split on instead of whitespace
+print(lovemuffin.split('e'))
+
+# A set of strings can be joined by calling the join() function on the operator you want placed between the strings
+some_strings = ["Here", "are", "some", "strings"]
+print(some_strings)
+print('-'.join(["Here", "are", "some", "strings"]))
+print('+'.join(some_strings))
+
+# We can also include unicode 👏 in our string literals
+print("See, unicode 👏!") # Although, this won't print the hands to the console...
+
+# We can concatonate strings using the + operator
+print("Con" + "cat" + "o" + "nate")
+# IF we want to concatonate non-string objects, we simply call str() on them
+print("Con" + "cat" + str(0) + "nate")
+# We can use the format() function to make concatenating code clearer
+print("Check {} out".format("this"))
+
+# Another example of function()
+pluto_mass = 1.303 * 10**22
+earth_mass = 5.9722 * 10**24
+population = 52910390
+# 2 decimal points, 3 decimal points, format as percent, separate with commas
+print("{} weighs about {:.2} kilograms ({:.3%} of Earth's mass). It is home to {:,} Plutonians.".format(
+planet, pluto_mass, pluto_mass / earth_mass, population,
+))
+
+
+# Dictionaries in Py are roughly the same as Hashmaps in Java - they map key-value pairs
+numbers = {'one':1, 'two':2, 'three':3} # Here, 'one', 'two', and 'three' are keys and 1, 2, 3 are values
+# The values can be accessed using the keys
+print(numbers['one'])
+# New values can be added as follows
+numbers['four'] = 4
+print(numbers)
+# Values can be changed the same way
+numbers['one'] = 'Hello!'
+print(numbers)
+
+# Py allows us to use dictionary comprehensions - similar to list comprehensions - to make dictionaries
+planets = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune']
+planet_to_initial = {planet: planet[0] for planet in planets}
+print(planet_to_initial)
+
+# The in operator can be used to tell us if something is in a dictionary
+print('Saturn' in planet_to_initial)
+
+# We can also loop over the keys in a dictionary with a for loop
+for k in numbers:
+    print("{} = {}".format(k, numbers[k]))
+
+# We can access all of the keys and values in a dictionary using the keys() and values() functions
+print(planet_to_initial.keys())
+print(planet_to_initial.values())
+
+# We can acces the key-value pairs simultaneously using items() NOTE: In Py, items refers to key-value pairs, one pair is one item
+print(planet_to_initial.items())
+# Or we can format the output
+for planet, initial in planet_to_initial.items():
+    print("{} begins with \"{}\"".format(planet.rjust(10), initial))
+
+help(str)
 
 
 
