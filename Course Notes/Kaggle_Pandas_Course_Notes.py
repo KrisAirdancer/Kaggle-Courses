@@ -500,4 +500,102 @@ country_variety_counts = reviews.groupby(['country', 'variety']).size().sort_val
 # Data Types and Missing Values
 ###############################
 
+# Data Types
+"""
+The type of data stored in a column of a DataFrame or in a Series is known as a dtype.
+To be clear, "type of data" means string, float, etc. - What is format of the data stored
+in that column or Series.
+
+The dtype can be retrived using .dtype
+
+reviews.price.dtype
+
+The dtypes (note the 's' - it's plural) attribute will return all of the data types
+of all of the columns in a DataFrame:
+
+reviews.dtypes
+
+Data types tell us something about how pandas is storing the data internally. float64
+means that it's using a 64-bit floating point number; int64 means a similarly sized
+integer instead, and so on.
+
+Note: Strings do NOT have their own data type. Instead, dtype called on a string returns "Object"
+
+It's possible to convert a column of one type into another wherever such a conversion makes
+sense by using the astype() function. For example, we may transform the points column from
+its existing int64 data type into a float64 data type:
+
+reviews.points.astype('float64')
+
+DataFrames and Series indicies also have their own data type:
+
+reviews.index.dtype
+
+Note: Besides the common data types (int, float, etc.), Pandas also supports more obscure
+data types - just something to be aware of at this point.
+"""
+
+# Missing Data
+"""
+Entries missing values are given the value NaN, short for "Not a Number". For technical
+reasons these NaN values are always of the float64 dtype.
+
+Pandas provides some methods specific to missing data. To select NaN entries you can use
+pd.isnull() (or its companion pd.notnull()). This is meant to be used thusly:
+
+reviews[pd.isnull(reviews.country)]
+
+The fillna() function can be used to replace NaN values with something else. In this case
+we are replacing NaNs with 'Unknown':
+
+reviews.region_2.fillna("Unknown")
+
+Another way to manage NaN values is by filling each missing value with the first non-null
+value that appears sometime after the given record in the database. This is known as the
+backfill strategy and can be useful for data that is recorded over time, such as stock prices
+or sales.
+
+Alternatively, we may have a non-null value that we would like to replace. For example,
+suppose that since this dataset was published, reviewer Kerin O'Keefe has changed her Twitter
+handle from @kerinokeefe to @kerino. One way to reflect this in the dataset is using the
+replace() method:
+
+reviews.taster_twitter_handle.replace("@kerinokeefe", "@kerino")
+"""
+
+# Helpful Code
+"""
+# Problem 1
+Create a Series from entries in the points column, but convert the entries to strings. 
+Hint: strings are str in native Python.
+
+point_strings = reviews.points.astype(str)
+
+# Problem 2
+Sometimes the price column is null. How many reviews in the dataset are missing a price?
+
+n_missing_prices = pd.isnull(reviews.price).sum()
+
+# Problem 3
+What are the most common wine-producing regions? Create a Series counting the number of
+times each value occurs in the region_1 field. This field is often missing data, so replace
+missing values with Unknown. Sort in descending order. Your output should look something like
+this:
+
+Unknown                    21247
+Napa Valley                 4480
+                           ...  
+Bardolino Superiore            1
+Primitivo del Tarantino        1
+Name: region_1, Length: 1230, dtype: int64
+
+reviews_per_region = reviews.region_1.fillna('Unknown').value_counts().sort_values(ascending=False)
+​
+​
+
+"""
+
+
+
+
 
