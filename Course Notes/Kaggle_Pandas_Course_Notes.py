@@ -238,6 +238,133 @@ reviews['index_backwards'] = range(len(reviews), 0, -1)
 reviews['index_backwards']
 """
 
+############################
+# Summary Functions and Maps
+############################
+
+# The describe() function provides information on a given DataFrame such as mean, max, number of data points, etc.
+# This function can be used on many different data types and it will change its output to match the input data type
+
+# The mean() function does exactly what it sounds like
+
+# The unique() function provides a list of all of the unique values in the dataset
+# The value_counts() function provides a list of all the unique value in the dataset and how many times they occur
+
+######
+# Maps
+######
+"""
+A map is a term, borrowed from mathematics, for a function that takes one set of values and
+"maps" them to another set of values. In data science we often have a need for creating new
+representations from existing data, or for transforming data from the format it is in now to
+the format that we want it to be in later.
+
+There are two mapping methods that you will use often.
+map() is the first, and slightly simpler one. For example, suppose that we wanted to remean
+the scores the wines received to 0. We can do this as follows:
+# review_points_mean = reviews.points.mean()
+# reviews.points.map(lambda p: p - review_points_mean)
+
+map() returns a new Series where all the values have been transformed by your function.
 
 
+"""
 
+# Lambda Functions (aka. An anonymous function)
+"""
+In Python, an anonymous function means that a function is without a name. As we already know
+that the def keyword is used to define a normal function in Python. Similarly, the lambda
+keyword is used to define an anonymous function in Python. It has the following syntax: 
+
+Syntax: lambda arguments: expression
+
+- This function can have any number of arguments but only one expression, which is evaluated
+and returned.
+- One is free to use lambda functions wherever function objects are required.
+- You need to keep in your knowledge that lambda functions are syntactically restricted to a
+single expression.
+- It has various uses in particular fields of programming besides other types of expressions
+in functions.
+"""
+
+"""
+apply() is the equivalent method if we want to transform a whole DataFrame by calling a custom
+method on each row.
+
+def remean_points(row):
+    row.points = row.points - review_points_mean
+    return row
+
+reviews.apply(remean_points, axis='columns')
+
+Note that map() and apply() return new, transformed Series and DataFrames, respectively.
+They don't modify the original data they're called on. If we look at the first row of reviews,
+we can see that it still has its original points value.
+
+"""
+"""
+Pandas provides many common mapping operations as built-ins. For example, here's a faster
+way of remeaning our points column:
+
+review_points_mean = reviews.points.mean()
+reviews.points - review_points_mean
+0        -1.447138
+1        -1.447138
+...   
+129969    1.552862
+129970    1.552862
+Name: points, Length: 129971, dtype: float64
+
+In this code we are performing an operation between a lot of values on the left-hand side
+(everything in the Series) and a single value on the right-hand side (the mean value).
+Pandas looks at this expression and figures out that we must mean to subtract that mean
+value from every value in the dataset.
+Pandas will also understand what to do if we perform these operations between Series of
+equal length. For example, an easy way of combining country and region information in the
+dataset would be to do the following:
+    
+reviews.country + " - " + reviews.region_1
+
+
+These operators are faster than map() or apply() because they uses speed ups built into
+pandas. All of the standard Python operators (>, <, ==, and so on) work in this manner.
+
+However, they are not as flexible as map() or apply(), which can do more advanced things,
+like applying conditional logic, which cannot be done with addition and subtraction alone.
+"""
+
+# Some helpful example code
+"""
+There are only so many words you can use when describing a bottle of wine. Is a wine more
+likely to be "tropical" or "fruity"? Create a Series descriptor_counts counting how many
+times each of these two words appears in the description column in the dataset.
+
+# n_trop = reviews.description.map(lambda desc: "tropical" in desc).sum()
+# n_fruity = reviews.description.map(lambda desc: "fruity" in desc).sum()
+# descriptor_counts = pd.Series([n_trop, n_fruity], index=['tropical', 'fruity'])
+"""
+
+"""
+We'd like to host these wine reviews on our website, but a rating system ranging from
+80 to 100 points is too hard to understand - we'd like to translate them into simple
+star ratings. A score of 95 or higher counts as 3 stars, a score of at least 85 but less
+than 95 is 2 stars. Any other score is 1 star.
+
+Also, the Canadian Vintners Association bought a lot of ads on the site, so any wines
+from Canada should automatically get 3 stars, regardless of points.
+
+Create a series star_ratings with the number of stars corresponding to each review in the
+dataset.
+
+def stars(row):
+    if row.country == 'Canada':
+        return 3
+    elif row.ponts >= 95:
+        return 3
+    elif row.points >= 85:
+        return 2
+    else:
+        return 1
+
+star_ratings = reviews.apply(stars, axis='columns'
+"""
