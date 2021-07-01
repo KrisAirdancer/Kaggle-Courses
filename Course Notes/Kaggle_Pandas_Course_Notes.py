@@ -366,5 +366,138 @@ def stars(row):
     else:
         return 1
 
-star_ratings = reviews.apply(stars, axis='columns'
+star_ratings = reviews.apply(stars, axis='columns')
 """
+
+
+######################
+# Grouping and Sorting
+######################
+
+"""
+The value_counts() fuction is a shortcut for:
+
+reviews.groupby('points').points.count()
+
+groupby() created a group of reviews which allotted the same point values to the given wines.
+Then, for each of these groups, we grabbed the points() column and counted how many times it
+appeared. value_counts() is just a shortcut to this groupby() operation.
+
+We can use any of the summary functions we've used before with this data. For example, to get
+the cheapest wine in each point value category, we can do the following:
+
+reviews.groupby('points').price.min()
+"""
+
+# More example code
+
+# Pick out the best wine by country and province:
+# reviews.groupby(['country', 'province']).apply(lambda df: df.loc[df.points.idxmax()])
+
+# Select the name of the first wine reviewed from each winery in the dataset:
+# reviews.groupby('winery').apply(lambda df: df.title.iloc[0])
+
+# The agg() (aggregate) function lets you run a bunch of different functions on your
+# DataFrame simultaneously. For example, we can generate a simple statistical summary
+# of the dataset as follows:
+
+# reviews.groupby(['country']).price.agg([len, min, max])
+
+################
+# Multi-Indicies
+################
+"""
+Multi-indicies are indicies that have a tiered structure. That is on leftward cell spans several
+of the cells that sit to its right. Think of a table containing a list of cities and countries.
+The countries could be tall cells on the left, and the cities in each country could be smaller
+cells to the right of their respetive country's cell.
+
+There are special functions for working with multi-indicies.
+
+One helpful way of dealing with multi-indicies is to simply revert them back to a regular
+index using the reset.index() function. This function will "de-merge" the large column
+and fill each of the new, regular-sizd columns, with the value that was in the large column.
+
+countries_reviewed.reset_index()
+"""
+
+# Sorting
+"""
+The sort_values() function allows us to sort data based on the data itself (alphabetical, 
+numerical, etc.)
+
+countries_reviewed = countries_reviewed.reset_index()
+countries_reviewed.sort_values(by='len')
+
+sort_values() defaults to ascending order, but we can use a boolean statement to change that:
+
+countries_reviewed.sort_values(by='len', ascending=False)
+
+The sort_index() function can be used to sort based on index values.
+
+countries_reviewed.sort_index()
+
+One can also pass a list of column names into the sort_values() function to have it sort
+by more than one column at a time. In this case, it will start by sorting the column at
+the end (rightmost) of the list you pass in and end with the first (leftmost).
+
+countries_reviewed.sort_values(by=['country', 'len'])
+"""
+
+# Understanding Pandas Index System
+"""
+Index is like an address, that’s how any data point across the dataframe or series can be
+accessed. Rows and columns both have indexes, rows indices are called as index and for columns
+its general column names.
+
+More info at: https://towardsdatascience.com/pandas-index-explained-b131beaf6f7b
+"""
+
+# Some helpful bits of code
+"""
+# Problem 1
+What is the best wine I can buy for a given amount of money? Create a Series whose index is
+wine prices and whose values is the maximum number of points a wine costing that much was
+given in a review. Sort the values by price, ascending (so that 4.0 dollars is at the top and
+3300.0 dollars is at the bottom).
+
+best_rating_per_price = reviews.groupby('price').points.max()
+OR - Both statements do the same thing
+best_rating_per_price = reviews.groupby('price')['points'].max().sort_index()
+
+# Problem 2
+What are the minimum and maximum prices for each variety of wine? Create a DataFrame whose
+index is the variety category from the dataset and whose values are the min and max values
+thereof.
+
+price_extremes = reviews.groupby('variety').price.agg(['min', 'max'])
+
+#Problem 3
+What are the most expensive wine varieties? Create a variable sorted_varieties containing
+a copy of the dataframe from the previous question where varieties are sorted in descending
+order based on minimum price, then on maximum price (to break ties).
+
+sorted_varieties = reviews.groupby('variety').price.agg(['min','max']).sort_values(by=['min', 'max'], ascending=False)
+OR - Both do the same thing. Note: The below "price_extremes" is from Problem 2 above.
+sorted_varieties = price_extremes.sort_values(by=['min', 'max'], ascending=False)
+
+# Problem 4
+Create a Series whose index is reviewers and whose values is the average review score given
+out by that reviewer. Hint: you will need the taster_name and points columns.
+
+reviewer_mean_ratings = reviews.groupby('taster_name').points.mean()
+
+# Problem 5
+What combination of countries and varieties are most common? Create a Series whose index
+is a MultiIndexof {country, variety} pairs. For example, a pinot noir produced in the US
+should map to {"US", "Pinot Noir"}. Sort the values in the Series in descending order based
+on wine count.
+
+country_variety_counts = reviews.groupby(['country', 'variety']).size().sort_values(ascending=False)
+"""
+
+###############################
+# Data Types and Missing Values
+###############################
+
+
