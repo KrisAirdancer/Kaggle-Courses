@@ -590,10 +590,60 @@ Primitivo del Tarantino        1
 Name: region_1, Length: 1230, dtype: int64
 
 reviews_per_region = reviews.region_1.fillna('Unknown').value_counts().sort_values(ascending=False)
-​
-​
+"""
+
+########################
+# Renaming and Combining
+########################
 
 """
+The rename() function allows you to rename index and/or column names:
+
+reviews.rename(columns={'points': 'score'})
+
+reviews.rename(index={0: 'firstEntry', 1: 'secondEntry'})
+
+set_index() can be used to rename index values (not the index name)
+
+Both the row index and the column index can have their own name attribute.
+The complimentary rename_axis() method may be used to change these names. For example:
+
+reviews.rename_axis("wines", axis='rows').rename_axis("fields", axis='columns')
+
+The concat(), merge(), and join() functions can be used to combine different DataFrames
+and/or Series in non-trivial ways.
+
+This is useful when we have data in different DataFrame or Series objects but having the
+same fields (columns). One example: the YouTube Videos dataset, which splits the data up
+based on country of origin (e.g. Canada and the UK, in this example). If we want to study
+multiple countries simultaneously, we can use concat() to smush them together:
+
+canadian_youtube = pd.read_csv("../input/youtube-new/CAvideos.csv")
+british_youtube = pd.read_csv("../input/youtube-new/GBvideos.csv")
+
+pd.concat([canadian_youtube, british_youtube])
+
+
+The join() method can only be used on DataFrames that have a shared index.
+
+left = canadian_youtube.set_index(['title', 'trending_date'])
+right = british_youtube.set_index(['title', 'trending_date'])
+
+left.join(right, lsuffix='_CAN', rsuffix='_UK')
+
+Note: The lsuffix and rsuffix parameters are necessary here because the data has the
+same column names in both British and Canadian datasets. If this wasn't true (because,
+say, we'd renamed them beforehand) we wouldn't need them.
+
+
+
+
+
+
+"""
+
+
+
 
 
 
