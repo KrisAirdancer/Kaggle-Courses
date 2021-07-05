@@ -448,12 +448,155 @@ do as Python will automatically save your data as UTF-8:
 
 # save our file (will be saved as UTF-8 by default!)
 kickstarter_2016.to_csv("ks-projects-201801-utf8.csv")
+"""
+
+
+#########################
+# Inconsistent Data Entry
+#########################
+"""
+- When reading in data it can happen that the same values will have been entered differently,
+such as "germany" vs "Germany" and " Germany" (note the space). These can cause the data to
+behave differently, such as sorting differently and being marked as unique when they are really
+the same.
+
+- Capitalization and extra whitespace are two of the most common issues. And they are easy
+to fix:
+
+# convert to lower case
+professors['Country'] = professors['Country'].str.lower()
+# remove trailing white spaces
+professors['Country'] = professors['Country'].str.strip()
+
+
+- In the case of errors like 'southkorea' vs 'south korea' we can use the FuzzyWuzzy package
+to conduct a Fuzzy Match to find values that are close to each other. Here's how it works:
+    - Fuzzy matching: The process of automatically finding text strings that are very
+    similar to the target string. In general, a string is considered "closer" to another
+    one the fewer characters you'd need to change if you were transforming one string into
+    another. So "apple" and "snapple" are two changes away from each other (add "s" and "n")
+    while "in" and "on" and one change away (rplace "i" with "o"). You won't always be able
+    to rely on fuzzy matching 100%, but it will usually end up saving you at least a little
+    time.
+    - Fuzzywuzzy returns a ratio given two strings. The closer the ratio is to 100, the
+    smaller the edit distance between the two strings. Here, we're going to get the ten
+    strings from our list of cities that have the closest distance to "d.i khan".
+
+Example of using FuzzyWuzzy
+# get the top 10 closest matches to "south korea"
+matches = fuzzywuzzy.process.extract("south korea", countries, limit=10, scorer=fuzzywuzzy.fuzz.token_sort_ratio)
+
+# take a look at them
+matches
+
+OUTPUT:
+[('south korea', 100),
+ ('southkorea', 48),
+ ('saudi arabia', 43),
+ ('norway', 35),
+ ('austria', 33),
+ ('ireland', 33),
+ ('pakistan', 32),
+ ('portugal', 32),
+ ('scotland', 32),
+ ('australia', 30)]
+
+We can see that two of the items in the cities are very close to "south korea": "south korea"
+and "southkorea". Let's replace all rows in our "Country" column that have a ratio of > 47
+with "south korea".
+
+To do this, I'm going to write a function. (It's a good idea to write a general purpose
+function you can reuse if you think you might have to do a specific task more than once or
+twice. This keeps you from having to copy and paste code too often, which saves time and
+can help prevent mistakes.)
+
+# function to replace rows in the provided column of the provided dataframe
+# that match the provided string above the provided ratio with the provided string
+def replace_matches_in_column(df, column, string_to_match, min_ratio = 47):
+    # get a list of unique strings
+    strings = df[column].unique()
+    
+    # get the top 10 closest matches to our input string
+    matches = fuzzywuzzy.process.extract(string_to_match, strings, 
+                                         limit=10, scorer=fuzzywuzzy.fuzz.token_sort_ratio)
+
+    # only get matches with a ratio > 90
+    close_matches = [matches[0] for matches in matches if matches[1] >= min_ratio]
+
+    # get the rows of all the close matches in our dataframe
+    rows_with_matches = df[column].isin(close_matches)
+
+    # replace all rows with close matches with the input matches 
+    df.loc[rows_with_matches, column] = string_to_match
+    
+    # let us know the function's done
+    print("All done!")
+
+
+Now that we have a function, we can put it to the test!
+
+# use the function we just wrote to replace close matches to "south korea" with "south korea"
+replace_matches_in_column(df=professors, column='Country', string_to_match="south korea")
+All done!
+And now let's check the unique values in our "Country" column again and make sure we've
+tidied up "south korea" correctly.
+
+# get all the unique values in the 'Country' column
+countries = professors['Country'].unique()
+
+# sort them alphabetically and then take a closer look
+countries.sort()
+countries
+array(['australia', 'austria', 'canada', 'china', 'finland', 'france',
+       'germany', 'greece', 'hongkong', 'ireland', 'italy', 'japan',
+       'macau', 'malaysia', 'mauritius', 'netherland', 'new zealand',
+       'norway', 'pakistan', 'portugal', 'russian federation',
+       'saudi arabia', 'scotland', 'singapore', 'south korea', 'spain',
+       'sweden', 'thailand', 'turkey', 'uk', 'urbana', 'usa', 'usofa'],
+      dtype=object)
+
+
+
+
+## Example of importing and cleaning up data:
+
+# convert to lower case
+professors['Country'] = professors['Country'].str.lower()
+# remove trailing white spaces
+professors['Country'] = professors['Country'].str.strip()
+
+# get the top 10 closest matches to "south korea"
+countries = professors['Country'].unique()
+matches = fuzzywuzzy.process.extract("south korea", countries, limit=10, scorer=fuzzywuzzy.fuzz.token_sort_ratio)
+
+def replace_matches_in_column(df, column, string_to_match, min_ratio = 47):
+    # get a list of unique strings
+    strings = df[column].unique()
+    
+    # get the top 10 closest matches to our input string
+    matches = fuzzywuzzy.process.extract(string_to_match, strings, 
+                                         limit=10, scorer=fuzzywuzzy.fuzz.token_sort_ratio)
+
+    # only get matches with a ratio > 90
+    close_matches = [matches[0] for matches in matches if matches[1] >= min_ratio]
+
+    # get the rows of all the close matches in our dataframe
+    rows_with_matches = df[column].isin(close_matches)
+
+    # replace all rows with close matches with the input matches 
+    df.loc[rows_with_matches, column] = string_to_match
+    
+    # let us know the function's done
+    print("All done!")
+    
+replace_matches_in_column(df=professors, column='Country', string_to_match="south korea")
+countries = professors['Country'].unique()
+
 
 
 
 
 """
-
 
 
 

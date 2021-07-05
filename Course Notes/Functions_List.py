@@ -120,6 +120,12 @@
 
 # decode()
 
+# lower()
+
+# strip()
+
+# extract()
+
 
 
 
