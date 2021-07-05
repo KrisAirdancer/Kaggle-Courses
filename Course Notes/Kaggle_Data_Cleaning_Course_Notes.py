@@ -391,12 +391,69 @@ day_of_month_landslides = day_of_month_landslides.dropna()
 
 # plot the day of the month
 sns.distplot(day_of_month_landslides, kde=False, bins=31)
+"""
 
+#####################
+# Character Encodings
+#####################
 
+"""
+- Character encoding are the rules that dictate how to map binary (011001011001) to human
+readable data ("hi").
+- When the wrong encoding (rule set) is used, the output is called 'mojibake' (moh-jee-ba-kay),
+which is a fun name for jiberish - it is also possible to get unknown characters (question mark
+in a diamond), which are the characters that are displayed when the passed binary doesn't
+map to any specific character.
+
+- UTF-8 is the most common character encoding in Python, so one should generally use UTF-8 encoding
+for their data.
+
+- You can change the encoding of an object in Python using the encode() function:
+# start with a string
+before = "This is the euro symbol: €"
+
+# check to see what datatype it is
+type(before)
+str
+
+# encode it to a different encoding, replacing characters that raise errors
+after = before.encode("utf-8", errors="replace")
+
+# check the type
+type(after)
+
+NOTE: !!! - Importantly, if you use the wrong encoding for a set of data then try to 
+decode it back to the correct encoding, it is possible, and not uncommon, for data to
+be lost - that is some of the characters will be unrecognizable when they are decoded
+back, making the data unusable!
+"""
+
+#########################################
+# Reading in files with encoding problems
+#########################################
+"""
+- Sometimes when reading data into Python, we will get an error due to the dataset being
+encoded in something other than UTF-8 - Python defaults to UTF-8 - There are two ways to
+go about handling this:
+    - 1) Guess at a few encodings to see if one works - this is slow and tedius
+    - 2) Use the chardet.detect() function to "detect" the correct encoding -  faster, but doesn't work 100% of the time though
+
+- chardet.detect() function example:
+# look at the first ten thousand bytes to guess the character encoding
+with open("../input/kickstarter-projects/ks-projects-201801.csv", 'rb') as rawdata: result = chardet.detect(rawdata.read(10000))
+
+- Once you work out the correct encoding, it is best to save the dataset as UTF-8 afterward
+so you don't have to go through the guessing and re-encoding process again. This is easy to
+do as Python will automatically save your data as UTF-8:
+
+# save our file (will be saved as UTF-8 by default!)
+kickstarter_2016.to_csv("ks-projects-201801-utf8.csv")
 
 
 
 
 """
+
+
 
 

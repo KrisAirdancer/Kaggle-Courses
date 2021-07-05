@@ -112,6 +112,14 @@
 
 # fillna()
 
+# to_datetime()
+
+# distplot()
+
+# encode()
+
+# decode()
+
 
 
 
