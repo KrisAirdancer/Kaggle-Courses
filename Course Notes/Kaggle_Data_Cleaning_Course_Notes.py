@@ -143,10 +143,260 @@ sf_permits_with_na_imputed.
 sf_permits_with_na_imputed = sf_permits.fillna(method='bfill', axis=0).fillna(0)
 """
 
+###########################
+# Scaling and Normalization
+###########################
+
+# Scaling
+"""
+- Scalilng changes the range of your data
+- Normalization changes the shape and distribution of your data
+
+Scaling
+- This means that you're transforming your data so that it fits within a specific scale,
+like 0-100 or 0-1. You want to scale data when you're using methods based on measures of
+how far apart data points are
+- Scaling allows us to compare different variables on the same scale, such as Yen vs Dollars.
+- If you plot your data before and after scaling it, you will see that the plots have the
+same shape, but that the x-axis has a different range - range changes, shape stays the same.
+
+Example - If run, this will demonstrate scaling
+# generate 1000 data points randomly drawn from an exponential distribution
+original_data = np.random.exponential(size=1000)
+
+# mix-max scale the data between 0 and 1
+scaled_data = minmax_scaling(original_data, columns=[0])
+
+# plot both together to compare
+fig, ax = plt.subplots(1,2)
+sns.distplot(original_data, ax=ax[0])
+ax[0].set_title("Original Data")
+sns.distplot(scaled_data, ax=ax[1])
+ax[1].set_title("Scaled data")
+
+"""
+
+# Normalization
+"""
+- Normalization is the process of adjusting a dataset to have all of its data points evenly
+distributed across a range of values.
+
+- Normal distribution: Also known as the "bell curve", this is a specific statistical
+distribution where a roughly equal observations fall above and below the mean, the mean
+and the median are the same, and there are more observations closer to the mean. The normal
+distribution is also known as the Gaussian distribution.
+
+- In general, you'll normalize your data if you're going to be using a machine learning or
+statistics technique that assumes your data is normally distributed. Some examples of these
+include linear discriminant analysis (LDA) and Gaussian naive Bayes. (Pro tip: any method with
+"Gaussian" in the name probably assumes normality.)
+
+Example - If run, this will demonstrate normalization
+# normalize the exponential data with boxcox
+normalized_data = stats.boxcox(original_data)
+
+# plot both together to compare
+fig, ax=plt.subplots(1,2)
+sns.distplot(original_data, ax=ax[0])
+ax[0].set_title("Original Data")
+sns.distplot(normalized_data[0], ax=ax[1])
+ax[1].set_title("Normalized data")
+
+
+"""
+
+############################################
+# Example Code for Scaling and Normalization
+############################################
+
+# Scaling Data
+"""
+## Setup
+
+# modules we'll use
+import pandas as pd
+import numpy as np
+
+# for Box-Cox Transformation
+from scipy import stats
+
+# for min_max scaling
+from mlxtend.preprocessing import minmax_scaling
+
+# plotting modules
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# read in all our data
+kickstarters_2017 = pd.read_csv("../input/kickstarter-projects/ks-projects-201801.csv")
+
+# set seed for reproducibility
+np.random.seed(0)
+
+## Scaling Data
+
+# select the usd_goal_real column
+original_data = pd.DataFrame(kickstarters_2017.usd_goal_real)
+
+# scale the goals from 0 to 1
+scaled_data = minmax_scaling(original_data, columns=['usd_goal_real'])
+
+# plot the original & scaled data together to compare
+fig, ax=plt.subplots(1,2,figsize=(15,3))
+sns.distplot(kickstarters_2017.usd_goal_real, ax=ax[0])
+ax[0].set_title("Original Data")
+sns.distplot(scaled_data, ax=ax[1])
+ax[1].set_title("Scaled data")
+
+## Compare our scaled data to our original data
+
+print('Original data\nPreview:\n', original_data.head())
+print('Minimum value:', float(original_data.min()),
+      '\nMaximum value:', float(original_data.max()))
+print('_'*30)
+
+print('\nScaled data\nPreview:\n', scaled_data.head())
+print('Minimum value:', float(scaled_data.min()),
+      '\nMaximum value:', float(scaled_data.max()))
+"""
+
+
+# Normalizing Data
+"""
+## Setup
+
+# get the index of all positive pledges (Box-Cox only takes positive values)
+index_of_positive_pledges = kickstarters_2017.usd_pledged_real > 0
+
+# get only positive pledges (using their indexes)
+positive_pledges = kickstarters_2017.usd_pledged_real.loc[index_of_positive_pledges]
+
+# normalize the pledges (w/ Box-Cox)
+normalized_pledges = pd.Series(stats.boxcox(positive_pledges)[0], 
+                               name='usd_pledged_real', index=positive_pledges.index)
+
+# plot both together to compare
+fig, ax=plt.subplots(1,2,figsize=(15,3))
+sns.distplot(positive_pledges, ax=ax[0])
+ax[0].set_title("Original Data")
+sns.distplot(normalized_pledges, ax=ax[1])
+ax[1].set_title("Normalized data")
+
+## Compare original data to normalized data
+
+print('Original data\nPreview:\n', positive_pledges.head())
+print('Minimum value:', float(positive_pledges.min()),
+      '\nMaximum value:', float(positive_pledges.max()))
+print('_'*30)
+
+print('\nNormalized data\nPreview:\n', normalized_pledges.head())
+print('Minimum value:', float(normalized_pledges.min()),
+      '\nMaximum value:', float(normalized_pledges.max()))
+
+"""
+
+###############
+# Parsing Dates
+###############
+
+# Example Code
+"""
+## Read in data
+
+# modules we'll use
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import datetime
+
+# read in our data
+landslides = pd.read_csv("../input/landslide-events/catalog.csv")
+
+# set seed for reproducibility
+np.random.seed(0)
+
+## Look at the specific part of the data we will be working with
+
+# print the first few rows of the date column
+print(landslides['date'].head())
+
+## Checking the datatype of the data we are interested in
+
+# check the data type of our date column
+landslides['date'].dtype
+
+Note: It is common to see dates entered as strings, which will be of the type 'Object'
+
+- There are date-specific datatypes, so if you get the type "object" back, you know the
+date isn't formatted as a date datatype.
+
+Note: You may have to check the numpy documentation to match the letter code to the dtype
+of the object. "O" is the code for "object", so we can see that these two methods give us
+the same information.
+
+## Parsing date strings as date types
+
+Convert our date columns to datetime
+Now that we know that our date column isn't being recognized as a date, it's time to convert
+it so that it is recognized as a date. This is called "parsing dates" because we're taking in
+a string and identifying its component parts.
+
+We can pandas what the format of our dates are with a guide called as "strftime directive",
+which you can find more information on at this link. The basic idea is that you need to point
+out which parts of the date are where and what punctuation is between them. There are lots of
+possible parts of a date, but the most common are %d for day, %m for month, %y for a two-digit
+year and %Y for a four digit year.
+
+Some examples:
+
+1/17/07 has the format "%m/%d/%y"
+17-1-2007 has the format "%d-%m-%Y"
+Looking back up at the head of the "date" column in the landslides dataset, we can see that
+it's in the format "month/day/two-digit year", so we can use the same syntax as the first
+example to parse in our dates:
+
+# create a new column, date_parsed, with the parsed dates
+landslides['date_parsed'] = pd.to_datetime(landslides['date'], format="%m/%d/%y")
+
+## Check that the parsing worked
+
+# print the first few rows
+landslides['date_parsed'].head()
+
+NOTE:
+If you run into an error while parsing dates that is caused by differently formatted dates
+in the same column, you can have pandas try to infer what the right date format should be.
+You can do that like so using infer_datetime_format=true:
+landslides['date_parsed'] = pd.to_datetime(landslides['Date'], infer_datetime_format=True)
+
+It is NOT best practice to always use the built in date format inferrer,
+There are two big reasons not to always have pandas guess the time format. The first is that
+pandas won't always been able to figure out the correct date format, especially if someone has
+gotten creative with data entry. The second is that it's much slower than specifying the exact
+format of the dates.
+
+## Extracting some of the date we want
+
+# get the day of the month from the date_parsed column
+day_of_month_landslides = landslides['date_parsed'].dt.day
+day_of_month_landslides.head()
+
+## Double checking our date data
+- It is possible that we got our months and days mixed up durign parsing. As such, it is best
+to simply check that all of the day or month values fall within the expected range of 
+31 days or 12 months repectively by charting them on a histogram (below checks the days).
+
+# remove na's
+day_of_month_landslides = day_of_month_landslides.dropna()
+
+# plot the day of the month
+sns.distplot(day_of_month_landslides, kde=False, bins=31)
 
 
 
 
 
+
+"""
 
 
