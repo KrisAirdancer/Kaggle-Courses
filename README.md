@@ -6,3 +6,5 @@ This repository houses all of my notes from the courses I've completed or am wor
 
 Courses Completed:
 - Python
+- Pandas
+- Data Cleaning
