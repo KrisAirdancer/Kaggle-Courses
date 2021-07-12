@@ -8,3 +8,4 @@ Courses Completed:
 - Python
 - Pandas
 - Data Cleaning
+- Microchallenges
